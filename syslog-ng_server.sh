@@ -21,7 +21,7 @@ done
 #restarts service with
 service_restart () {
 	service syslog-ng restart
-	local results = "service syslog-ng status"
+	service syslog-ng status
 done
 }
 
@@ -33,14 +33,26 @@ sudo_check () {
 	fi	
 }
 
-config_txt = "@version: 3.16
+config_txt = "@version: 3.5
 @include "scl.conf"
-source s_local {
-    system(); internal();
-};
-destination d_local {
-    file("/var/log/messages");
-};
-log {
-    source(s_local); destination(d_local);
-};"
+@include "`scl-root`/system/tty10.conf"
+    options {
+        time-reap(30);
+        mark-freq(10);
+        keep-hostname(yes);
+        };
+    source s_local { system(); internal(); };
+    source s_network {
+        syslog(transport(tcp) port(514));
+        };
+    destination d_local {
+    file("/var/log/syslog-ng/messages_${HOST}"); };
+    destination d_logs {
+        file(
+            "/var/log/syslog-ng/${HOST}/${YEAR}_${MONTH}_${DAY}.log"
+            create-dirs(yes)
+            owner("root")
+            group("root")
+            perm(0777)
+            ); };
+    log { source(s_local); source(s_network); destination(d_logs); };"
