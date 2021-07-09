@@ -1,8 +1,4 @@
 #!/bin/bash
-sudo_check
-syslog_install
-config
-service_restart
 
 #installs syslog-ng
 syslog_install () {
@@ -56,3 +52,9 @@ config_txt = "@version: 3.5
             perm(0777)
             ); };
     log { source(s_local); source(s_network); destination(d_logs); };"
+
+
+sudo_check
+syslog_install
+config
+service_restart
