@@ -1,5 +1,10 @@
 #!/bin/bash/
 
+#changes ip from cli arg
+ip_change () {
+	sed -i "s/ip/$1/g" /etc/syslog-ng/syslog-ng.conf
+}
+
 #installs syslog-ng
 syslog_install () {
 	sudo apt install syslog-ng -y
@@ -13,7 +18,7 @@ config () {
 
 }
 
-#restarts service with
+#restarts syslog-ng server
 service_restart () {
 	service syslog-ng restart
 	service syslog-ng status
@@ -28,7 +33,15 @@ sudo_check () {
 	fi	
 }
 
+# checks to make sure there's an arg for the ip in cli.
+if [[ $# -eq 0 ]]; then
+	echo "No arguments supplied, need to run the script with an ip I.E ./syslog-ng_client.sh x.x.x.x"
+	exit
+fi
+
+
 sudo_check
 syslog_install
 config
+ip_change
 service_restart
