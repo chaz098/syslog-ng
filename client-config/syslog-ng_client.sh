@@ -1,4 +1,4 @@
-#!/bin/bash/
+#!/bin/bash
 
 #changes ip from cli arg
 ip_change () {
