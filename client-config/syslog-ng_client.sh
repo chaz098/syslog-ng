@@ -2,7 +2,7 @@
 
 #changes ip from cli arg
 ip_change () {
-	sed -i "s/ip/$1/g" /etc/syslog-ng/syslog-ng.conf
+	sed -i "s/ip/$ip/g" /etc/syslog-ng/syslog-ng.conf
 }
 
 #installs syslog-ng
@@ -39,9 +39,10 @@ if [[ $# -eq 0 ]]; then
 	exit
 fi
 
+ip=$1
 
 sudo_check
 syslog_install
 config
-ip_change
+ip_change $ip
 service_restart
